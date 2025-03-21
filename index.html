@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список задач</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Список задач</h1>
+        <div class="new-task-window">
+            <h2>Новая задача</h2>
+            <div class="new-task">
+                <input type="text" id="taskInput" placeholder="Название задачи...">
+                <button onclick="addTask()">➕ Добавить</button>
+            </div>
+        </div>
+        <div class="task-board">
+            <div class="column backlog">
+                <h2>Бэклог</h2>
+                <div class="tasks-container" id="backlog">
+                    <div class="task">Выучить JS</div>
+                    <div class="task">Выучить React</div>
+                    <div class="task">Сделать домашку</div>
+                </div>
+            </div>
+            <div class="column in-progress">
+                <h2>В процессе</h2>
+                <div class="tasks-container" id="inProgress">
+                    <div class="task">Попить воды</div>
+                    <div class="task">Позвонить маме</div>
+                </div>
+            </div>
+            <div class="column done">
+                <h2>Готово</h2>
+                <div class="tasks-container" id="done">
+                    <div class="task">Погладить кота</div>
+                    <div class="task">Сходить погулять</div>
+                </div>
+            </div>
+            <div class="column trash">
+                <h2>Корзина</h2>
+                <div class="tasks-container" id="trashContainer">
+                    <div class="task">Прочитать Войну и Мир</div>
+                    <div class="task">Доделать домашку</div>
+                    <div class="task clear-task" onclick="clearTrash()">✖ Очистить</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
