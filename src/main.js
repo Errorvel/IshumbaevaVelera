@@ -4,15 +4,15 @@ import FormAddTaskComponent from './view/form-add-task-component.js';
 import TasksBoardPresenter from './presenter/tasks-board-presenter.js';
 import TasksModel from './model/task-model.js';
 
-const tasksBoardContainer = document.querySelector('.container');
+const tasksBoardContainer = document.querySelector('.container');  
 
-const tasksModel = new TasksModel();
+const tasksModel = new TasksModel();  
 const tasksBoardPresenter = new TasksBoardPresenter({
-  boardContainer: tasksBoardContainer,
+  boardContainer: tasksBoardContainer,  
   tasksModel,
 });
 
-render(new HeaderComponent(), tasksBoardContainer, RenderPosition.AFTERBEGIN);
-render(new FormAddTaskComponent(), tasksBoardContainer);
+render(new HeaderComponent(), tasksBoardContainer, RenderPosition.AFTERBEGIN);  
+render(new FormAddTaskComponent(), tasksBoardContainer); 
 
-tasksBoardPresenter.init();
+tasksBoardPresenter.init(); 

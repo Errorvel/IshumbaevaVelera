@@ -1,23 +1,9 @@
-import { createElement } from '../framework/render.js';
-import ClearButtonComponent from './clear-button-component.js';
-function createBoardComponentTemplate() {
-  return `<div class="task-board"></div>`; 
-}
+import { AbstractComponent } from "../framework/view/abstract-component.js";
 
-export default class BoardComponent {
-  getTemplate() {
-    return createBoardComponentTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-      
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+export default class BoardComponent extends AbstractComponent {
+  get template() {
+    return `
+      <div class="task-board"></div>
+    `;
   }
 }

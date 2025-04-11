@@ -14,16 +14,6 @@ export const tasks = [
         title: "Устроиться на работу",
         status: "backlog",
     },
-    {
-        id: "4",
-        title: "Выучить JS",
-        status: "processing",
-    },
-    {
-        id: "5",
-        title: "Выучиить React",
-        status: "processing",
-    },
     { 
         id: "6", 
         title: "Сдать проект", 
