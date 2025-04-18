@@ -10,16 +10,38 @@ export default class TasksBoardPresenter {
   #boardContainer = null;
   #tasksModel = null;
   #tasksBoardComponent = new BoardComponent();
-  #tasks = [];
 
   constructor({ boardContainer, tasksModel }) {
     this.#boardContainer = boardContainer;
     this.#tasksModel = tasksModel;
+    this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
   }
 
   init() {
-    this.#tasks = [...this.#tasksModel.tasks];
     this.#renderBoard();
+  }
+
+  createTask() {
+    const taskTitle = document.querySelector('#add-task')?.value.trim();
+    if (!taskTitle) {
+      return;
+    }
+
+    this.#tasksModel.addTask(taskTitle);
+    document.querySelector('#add-task').value = '';
+  }
+
+  get tasks() {
+    return this.#tasksModel.tasks;
+  }
+
+  #handleModelChange() {
+    this.#clearBoard();
+    this.#renderBoard();
+  }
+
+  #clearBoard() {
+    this.#tasksBoardComponent.element.innerHTML = '';
   }
 
   #renderTask(task, container) {
@@ -27,32 +49,36 @@ export default class TasksBoardPresenter {
     render(taskComponent, container);
   }
 
-  #renderTasksList(status, tasks, container) {
-    const taskList = new TaskListComponent({ 
-      title: StatusLabel[status], 
-      status 
+  #renderTasksList(status, container) {
+    const taskListComponent = new TaskListComponent({
+      title: StatusLabel[status],
+      status
     });
-    render(taskList, container);
 
-    if (tasks.length === 0) {
+    render(taskListComponent, container);
+
+    const tasksForStatus = this.tasks.filter(task => task.status === status);
+
+    if (tasksForStatus.length === 0) {
       const emptyPlaceholder = new EmptyPlaceholderComponent();
-      render(emptyPlaceholder, taskList.element);
+      render(emptyPlaceholder, taskListComponent.element);
     } else {
-      tasks.forEach(task => this.#renderTask(task, taskList.element));
+      tasksForStatus.forEach(task => this.#renderTask(task, taskListComponent.element));
     }
 
     if (status === Status.BASKET) {
-      const clearButton = new ClearButtonComponent();
-      render(clearButton, taskList.element);
+      const clearButton = new ClearButtonComponent({
+        onClear: () => this.#tasksModel.deleteTasksByStatus(Status.BASKET)
+      });
+      render(clearButton, taskListComponent.element);
     }
   }
 
   #renderBoard() {
     render(this.#tasksBoardComponent, this.#boardContainer);
-    
+
     Object.values(Status).forEach(status => {
-      const tasksForStatus = this.#tasks.filter(task => task.status === status);
-      this.#renderTasksList(status, tasksForStatus, this.#tasksBoardComponent.element);
+      this.#renderTasksList(status, this.#tasksBoardComponent.element);
     });
   }
 }
