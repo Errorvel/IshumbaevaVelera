@@ -22,13 +22,12 @@ export default class TasksBoardPresenter {
   }
 
   createTask() {
-    const taskTitle = document.querySelector('#add-task')?.value.trim();
-    if (!taskTitle) {
-      return;
-    }
+    const input = document.querySelector('#add-task');
+    const title = input?.value.trim();
+    if (!title) return;
 
-    this.#tasksModel.addTask(taskTitle);
-    document.querySelector('#add-task').value = '';
+    this.#tasksModel.addTask(title);
+    input.value = '';
   }
 
   get tasks() {
@@ -44,33 +43,39 @@ export default class TasksBoardPresenter {
     this.#tasksBoardComponent.element.innerHTML = '';
   }
 
-  #renderTask(task, container) {
-    const taskComponent = new TaskComponent(task);
-    render(taskComponent, container);
+  #renderTask(task, listContainer) {
+    const taskComponent = new TaskComponent({ task });
+    render(taskComponent, listContainer);
+  }
+
+  #handleTaskDrop(taskId, newStatus, newIndex) {
+    this.#tasksModel.updateTaskStatus(taskId, newStatus, newIndex);
   }
 
   #renderTasksList(status, container) {
-    const taskListComponent = new TaskListComponent({
+    const listCmp = new TaskListComponent({
+      status,
       title: StatusLabel[status],
-      status
+      onTaskDrop: this.#handleTaskDrop.bind(this),
     });
+    render(listCmp, container);
 
-    render(taskListComponent, container);
+    const listContainer = listCmp.element.querySelector('.tasks-container');
+    const items = this.tasks.filter(t => t.status === status);
 
-    const tasksForStatus = this.tasks.filter(task => task.status === status);
-
-    if (tasksForStatus.length === 0) {
-      const emptyPlaceholder = new EmptyPlaceholderComponent();
-      render(emptyPlaceholder, taskListComponent.element);
+    if (items.length === 0) {
+      render(new EmptyPlaceholderComponent(), listContainer);
     } else {
-      tasksForStatus.forEach(task => this.#renderTask(task, taskListComponent.element));
+      items.forEach(task => this.#renderTask(task, listContainer));
     }
 
     if (status === Status.BASKET) {
-      const clearButton = new ClearButtonComponent({
-        onClear: () => this.#tasksModel.deleteTasksByStatus(Status.BASKET)
-      });
-      render(clearButton, taskListComponent.element);
+      render(
+        new ClearButtonComponent({
+          onClear: () => this.#tasksModel.deleteTasksByStatus(Status.BASKET),
+        }),
+        listContainer
+      );
     }
   }
 
