@@ -208,8 +208,10 @@ body {
 
 .btn.clear:disabled {
   background: #ccc;
+  cursor: not-allowed; /* Добавь это */
   box-shadow: none;
 }
+
 
 .backlog h2 { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); }
 .processing h2 { background: linear-gradient(135deg, #0056b3 0%, #004494 100%); }

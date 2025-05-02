@@ -8,7 +8,6 @@ function createTasksListComponentTemplate(status, title) {
     </section>
   `;
 }
-
 export default class TasksListComponent extends AbstractComponent {
   #status = null;
   #title = null;
@@ -19,34 +18,38 @@ export default class TasksListComponent extends AbstractComponent {
     this.#status = status;
     this.#title = title;
     this.#onTaskDrop = onTaskDrop;
-    this.#setDropHandler();
+    this._setupDropZone();
   }
 
   get template() {
     return createTasksListComponentTemplate(this.#status, this.#title);
   }
 
-  #setDropHandler() {
-    this.element.addEventListener("dragover", event => {
+  _setupDropZone() {
+    const container = this.element.querySelector(".tasks-container");
+  
+    container.addEventListener("dragover", (event) => {
       event.preventDefault();
       event.dataTransfer.dropEffect = "move";
     });
-
-    this.element.addEventListener("drop", event => {
+  
+    container.addEventListener("drop", (event) => {
       event.preventDefault();
       const taskId = event.dataTransfer.getData("text/plain");
-      const container = this.element.querySelector(".tasks-container");
       const { clientY } = event;
-      const items = Array.from(container.children);
-      let newIndex = items.length;
-      for (let i = 0; i < items.length; i++) {
-        const rect = items[i].getBoundingClientRect();
+  
+      const items = Array.from(container.children).filter(el => el.matches('[data-id]'));
+      let beforeTaskId = null;
+  
+      for (const item of items) {
+        const rect = item.getBoundingClientRect();
         if (clientY < rect.top + rect.height / 2) {
-          newIndex = i;
+          beforeTaskId = item.dataset.id;
           break;
         }
       }
-      this.#onTaskDrop(taskId, this.#status, newIndex);
+  
+      this.#onTaskDrop(taskId, this.#status, beforeTaskId);
     });
   }
-}
+}  

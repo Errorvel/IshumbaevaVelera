@@ -1,7 +1,7 @@
-import { AbstractComponent } from "../framework/view/abstract-component.js";
+import { AbstractComponent } from '../framework/view/abstract-component.js';
 
 export default class ClearButtonComponent extends AbstractComponent {
-  constructor({ onClear }) {
+  constructor({ onClear } = {}) {
     super();
     if (onClear) {
       this.setOnClearHandler(onClear);
@@ -17,4 +17,12 @@ export default class ClearButtonComponent extends AbstractComponent {
   setOnClearHandler(handler) {
     this.element.addEventListener('click', handler);
   }
+
+  disable() {
+    this.element.disabled = true;
+  }
+  enable() {
+    this.element.disabled = false;
+  }
+  
 }
